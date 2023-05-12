@@ -7,7 +7,7 @@ import Footer from './footer'
 
 export default function Landing() {
     return (
-        <Page>
+        <Page external>
             <Header />
             <Highlight />
             <Perks />
