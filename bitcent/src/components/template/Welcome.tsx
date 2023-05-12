@@ -11,7 +11,7 @@ export default function Welcome() {
     }
 
     return (
-        <div className={`text-3xl font-black`}>
+        <div className={`text-3xl font-semibold`}>
             Olá {renderName()} 👋
         </div>
     )
