@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import Transaction from '@/logic/core/finances/Transaction'
 
-export default function useForm(initialData: Transaction) {
-    const [data, setData] = useState(initialData)
+export default function useForm<T = any>(initialData: T) {
+    const [data, setData] = useState<T>(initialData)
 
     function changeAttribute(attribute: string, fn?: Function) {
         return (valueOrEvent: any) => {
