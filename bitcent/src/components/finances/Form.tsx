@@ -14,7 +14,7 @@ interface FormProps {
 }
 
 export default function Form(props: FormProps) {
-    const {data, changeAttribute} = useForm(props.transaction)
+    const {data, changeAttribute} = useForm<Transaction>(props.transaction)
 
     return (
         <div
@@ -23,7 +23,7 @@ export default function Form(props: FormProps) {
                 rounded-xl overflow-hidden
             `}
         >
-            <div className='bg-black py-3 px-7 text-zinc-400'>Formulário</div>
+            <div className='bg-[#111] py-3 px-7 text-zinc-400'>Formulário</div>
             <div className='flex flex-col gap-4 p-4 sm:p-7'>
                 <TextInput
                     label='Descrição'
