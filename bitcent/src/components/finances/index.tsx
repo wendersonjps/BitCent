@@ -1,55 +1,72 @@
-import { useState } from 'react'
-import { Button } from '@mantine/core'
-import { IconPlus } from '@tabler/icons-react'
-import Transaction, { voidTransaction } from '@/logic/core/finances/Transaction'
-import Id from '@/logic/core/shared/Id'
+import { Button, SegmentedControl } from '@mantine/core'
+import { IconLayoutGrid, IconList, IconPlus } from '@tabler/icons-react'
+import { voidTransaction } from '@/logic/core/finances/Transaction'
+import useTransaction, { ShowType } from '@/data/hooks/useTransaction'
 import Page from '../template/Page'
 import Header from '../template/Header'
+import DateField from '../template/DateField'
 import Content from '../template/Content'
 import NotFound from '../template/NotFound'
 import Form from './Form'
 import List from './List'
-import fakeTransactions from '@/data/constants/fakeTransactions'
-
+import Grid from './Grid'
 
 export default function Finances() {
-    const [transactions, setTransactions] = useState<Transaction[]>(fakeTransactions)
-    const [transaction, setTransaction] = useState<Transaction | null>(null)
+    const {
+        data,
+        setData,
+        transaction,
+        transactions,
+        showType,
+        setTransaction,
+        setShowType,
+        save,
+        remove,
+    } = useTransaction()
 
-    function save(transaction: Transaction) {
-        const othersTransactions = transactions.filter(
-            (t) => t.id !== transaction.id
+    function renderButtons() {
+        return (
+            <div className='flex justify-between'>
+                <DateField date={data} changeDate={setData} />
+                <div className='flex gap-5'>
+                    <Button
+                        onClick={() => setTransaction(voidTransaction)}
+                        leftIcon={<IconPlus />}
+                        className='bg-gradient-to-r from-violet-600 to-blue-500'
+                    >
+                        Nova Transação
+                    </Button>
+                    <SegmentedControl
+                        data={[
+                            { label: <IconList />, value: 'list' },
+                            { label: <IconLayoutGrid />, value: 'grid' },
+                        ]}
+                        onChange={(type) => setShowType(type as ShowType)}
+                    />
+                </div>
+            </div>
         )
-        setTransactions([
-            ...othersTransactions,
-            {
-                ...transaction,
-                id: transaction.id ?? Id.new(),
-            },
-        ])
-        setTransaction(null)
     }
 
-    function remove(transaction: Transaction) {
-        const othersTransactions = transactions.filter(
-            (t) => t.id !== transaction.id
+    function renderTransactions() {
+        return showType === 'list' ? (
+            <List
+                transactions={transactions}
+                selectTransaction={setTransaction}
+            />
+        ) : (
+            <Grid
+                transactions={transactions}
+                selectTransaction={setTransaction}
+            />
         )
-        setTransactions(othersTransactions)
-        setTransaction(null)
     }
 
     return (
         <Page>
             <Header />
             <Content className='gap-5'>
-                <Button
-                    onClick={() => setTransaction(voidTransaction)}
-                    leftIcon={<IconPlus />}
-                    color='indigo'
-                    className='bg-indigo-600'
-                >
-                    Nova Transação
-                </Button>
+                {renderButtons()}
                 {transaction ? (
                     <Form
                         transaction={transaction}
@@ -58,10 +75,7 @@ export default function Finances() {
                         cancel={() => setTransaction(null)}
                     />
                 ) : transactions.length ? (
-                    <List
-                        transactions={transactions}
-                        selectTransaction={setTransaction}
-                    />
+                    renderTransactions()
                 ) : (
                     <NotFound>Nenhuma transação encontrada!</NotFound>
                 )}
