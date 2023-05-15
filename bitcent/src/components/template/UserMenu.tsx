@@ -1,10 +1,11 @@
+import { useContext } from 'react'
 import Link from 'next/link'
 import { Avatar, Menu } from '@mantine/core'
 import { IconArrowsRightLeft, IconLogout, IconUser } from '@tabler/icons-react'
-import user from '@/data/constants/fakeUser'
+import AuthContext from '@/data/contexts/AuthContext'
 
 export default function UserMenu() {
-    function logout() {}
+    const { user, logout } = useContext(AuthContext)
 
     return (
         <Menu>

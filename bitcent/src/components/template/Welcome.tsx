@@ -1,7 +1,9 @@
-import user from '@/data/constants/fakeUser'
+import { useContext } from 'react'
+import AuthContext from '@/data/contexts/AuthContext'
 
-// https://unicode-table.com/en/1F44B/
 export default function Welcome() {
+    const { user } = useContext(AuthContext)
+
     function renderName() {
         return (
             <span className='hidden sm:inline'>
